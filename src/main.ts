@@ -1,8 +1,9 @@
 
 import { v4 as randomUUID } from 'uuid'
-import van from './lib/van'
+import van, { State } from './lib/van'
 import 'todomvc-app-css/index.css'
 import { TodoItem } from './components/TodoItem'
+import { Atom, WritableAtom, atom, createStore } from 'jotai/vanilla'
 
 
 export interface Todo {
@@ -15,11 +16,49 @@ export interface Todo {
 const { a, button, footer, h1, header, input, label, li, section, span, ul } = van.tags
 
 
+const todosAtom = atom<Todo[]>([
+  { label: "Todo 1", id: "321123", is_delete: false, done: false },
+  { label: "Todo 2", id: "123321", is_delete: false, done: true }
+])
+
+type UseAtom = {
+  <Value, Args extends unknown[], Result>(atom: WritableAtom<Value, Args, Result>): State<Value>
+  <Value>(atom: Atom<Value>): State<Value>
+}
+
+
+function vanjsJotaiFactory(): UseAtom {
+  const store = createStore()
+  return <Value, Args extends unknown[], Result>(atom: WritableAtom<Value, Args, Result> | Atom<Value>) => {
+    const atomState = van.state(store.get(atom))
+    return new Proxy(atomState, {
+      get(state, prop) {
+        if (prop === 'val')
+          return store.get(atom)
+        //@ts-expect-error
+        return state[prop]
+      },
+      set(state, prop, newValue: Value) {
+        //@ts-expect-error
+        state[prop] = newValue
+        if (prop === 'val' && 'write' in atom && newValue !== store.get(atom)) {
+          //@ts-expect-error
+          store.set(atom, newValue)
+        }
+        return true
+      }
+    })
+  }
+}
+
+const useAtom = vanjsJotaiFactory()
+
 const App = () => {
-  const todos = van.state<Todo[]>([
-    { label: "Todo 1", id: "321123", is_delete: false, done: false },
-    { label: "Todo 2", id: "123321", is_delete: false, done: true }
-  ])
+  const todos = useAtom(todosAtom)
+  // const todos = van.state<Todo[]>([
+  //   { label: "Todo 1", id: "321123", is_delete: false, done: false },
+  //   { label: "Todo 2", id: "123321", is_delete: false, done: true }
+  // ])
 
   const inputTodo = van.state('')
 
