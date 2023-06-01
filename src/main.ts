@@ -33,19 +33,15 @@ function vanjsJotaiFactory(): UseAtom {
     const atomState = van.state(store.get(atom))
     return new Proxy(atomState, {
       get(state, prop) {
-        if (prop === 'val')
-          return store.get(atom)
-        //@ts-expect-error
-        return state[prop]
+        return prop === 'val' ? store.get(atom) : Reflect.get(state, prop)
       },
       set(state, prop, newValue: Value) {
-        //@ts-expect-error
-        state[prop] = newValue
+        const ret = Reflect.set(state, prop, newValue)
         if (prop === 'val' && 'write' in atom && newValue !== store.get(atom)) {
           //@ts-expect-error
           store.set(atom, newValue)
         }
-        return true
+        return ret
       }
     })
   }
