@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@types/uuid':
     specifier: ^9.0.1
@@ -13,6 +17,9 @@ dependencies:
   uuid:
     specifier: ^9.0.0
     version: 9.0.0
+  vanjs-core:
+    specifier: ^1.0.1
+    version: 1.0.1
 
 devDependencies:
   typescript:
@@ -319,6 +326,10 @@ packages:
   /uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
     hasBin: true
+    dev: false
+
+  /vanjs-core@1.0.1:
+    resolution: {integrity: sha512-zhM+trVGTTb3cfepwb+MKLMFzy78+ElRFOV/n4vzi2B1FqT0UfMoUFp1wo4pZ8yEQ4TAZHMA6npmd9fIC5ya1g==}
     dev: false
 
   /vite@4.3.9:
