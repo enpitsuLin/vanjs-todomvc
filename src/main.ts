@@ -1,6 +1,5 @@
-
 import { v4 as randomUUID } from 'uuid'
-import van, { State } from './lib/van'
+import van, { State } from 'vanjs-core'
 import 'todomvc-app-css/index.css'
 import { TodoItem } from './components/TodoItem'
 import { Atom, WritableAtom, atom, createStore } from 'jotai/vanilla'
@@ -33,7 +32,8 @@ function vanjsJotaiFactory(): UseAtom {
     const atomState = van.state(store.get(atom))
     return new Proxy(atomState, {
       get(state, prop) {
-        return prop === 'val' ? store.get(atom) : Reflect.get(state, prop)
+        const r = Reflect.get(state, prop)
+        return prop === 'val' ? store.get(atom) : r
       },
       set(state, prop, newValue: Value) {
         const ret = Reflect.set(state, prop, newValue)
@@ -93,63 +93,61 @@ const App = () => {
     ),
 
     section({ class: "main" },
-      van.bind(todos, (todos) => input({
+      () => input({
         id: "toggle-all",
         class: "toggle-all",
         type: "checkbox",
         onchange: onToggleAll,
-        checked: todos.filter(i => !i.done).length === 0
-      })),
+        checked: todos.val.filter(i => !i.done).length === 0
+      }),
       label({ for: "toggle-all" }, "Mark all as complete"),
-      van.bind(todos, filter, (todosState, filterState) => {
+      () => {
         return ul(
           { class: "todo-list" },
-          todosState
-            .filter(i => (filterState === 'active' && !i.done) ||
-              (filterState === 'completed' && i.done) ||
-              filterState === 'all')
+          todos.val
+            .filter(i => (filter.val === 'active' && !i.done) ||
+              (filter.val === 'completed' && i.done) ||
+              filter.val === 'all')
             .map(todo => TodoItem({
               todo, onChange: (todo) =>
                 todos.val = todos.val.map(i => (i.id === todo.id ? todo : i))
             }))
         )
-      }),
+      },
       footer({ class: "footer" },
         span({ class: "todo-count" }),
-        van.bind(filter, (filterState) => {
-          return ul({ class: "filters" },
-            li(
-              a(
-                {
-                  href: "#/",
-                  class: filterState === 'all' ? "selected" : "",
-                  onclick: () => filter.val = 'all'
-                },
-                "All",
-              )
-            ),
-            li(
-              a(
-                {
-                  href: "#/active",
-                  class: filterState === 'active' ? "selected" : "",
-                  onclick: () => filter.val = 'active'
-                },
-                "Active",
-              )
-            ),
-            li(
-              a(
-                {
-                  href: "#/completed",
-                  class: filterState === 'completed' ? "selected" : "",
-                  onclick: () => filter.val = 'completed'
-                },
-                "Completed",
-              )
-            ),
-          )
-        }),
+        () => ul({ class: "filters" },
+          li(
+            a(
+              {
+                href: "#/",
+                class: filter.val === 'all' ? "selected" : "",
+                onclick: () => filter.val = 'all'
+              },
+              "All",
+            )
+          ),
+          li(
+            a(
+              {
+                href: "#/active",
+                class: filter.val === 'active' ? "selected" : "",
+                onclick: () => filter.val = 'active'
+              },
+              "Active",
+            )
+          ),
+          li(
+            a(
+              {
+                href: "#/completed",
+                class: filter.val === 'completed' ? "selected" : "",
+                onclick: () => filter.val = 'completed'
+              },
+              "Completed",
+            )
+          ),
+        ),
         button({ class: "clear-completed", onclick: onClearCompleted },
           "Clear completed",
         ),

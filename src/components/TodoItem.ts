@@ -1,6 +1,4 @@
-
-
-import van from '../lib/van'
+import van from 'vanjs-core'
 import { Todo } from '../main'
 const { div, button, input, label, li } = van.tags
 
@@ -39,9 +37,9 @@ export const TodoItem = (props: {
     onkeypress: onEnter,
     onblur: () => editing.val = false
   })
-  return van.bind(editing, (editingState) => li(
+  return () => li(
     {
-      class: [editingState && 'editing', todo.done && 'completed'].filter(Boolean).join(' '),
+      class: [editing.val && 'editing', todo.done && 'completed'].filter(Boolean).join(' '),
       onclick: onClick
     },
     div({ class: "view", style: todo.is_delete ? "display:none" : "" },
@@ -49,6 +47,6 @@ export const TodoItem = (props: {
       label(todo.label),
       button({ class: "destroy", onclick: onDelete })
     ),
-    editingState ? editingDom : ''
-  ))
+    editing.val ? editingDom : ''
+  )
 }
