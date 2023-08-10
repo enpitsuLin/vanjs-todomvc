@@ -101,19 +101,17 @@ const App = () => {
         checked: todos.val.filter(i => !i.done).length === 0
       }),
       label({ for: "toggle-all" }, "Mark all as complete"),
-      () => {
-        return ul(
-          { class: "todo-list" },
-          todos.val
-            .filter(i => (filter.val === 'active' && !i.done) ||
-              (filter.val === 'completed' && i.done) ||
-              filter.val === 'all')
-            .map(todo => TodoItem({
-              todo, onChange: (todo) =>
-                todos.val = todos.val.map(i => (i.id === todo.id ? todo : i))
-            }))
-        )
-      },
+      () => ul(
+        { class: "todo-list" },
+        todos.val
+          .filter(i => (filter.val === 'active' && !i.done) ||
+            (filter.val === 'completed' && i.done) ||
+            filter.val === 'all')
+          .map(todo => TodoItem({
+            todo, onChange: (todo) =>
+              todos.val = todos.val.map(i => (i.id === todo.id ? todo : i))
+          }))
+      ),
       footer({ class: "footer" },
         span({ class: "todo-count" }),
         () => ul({ class: "filters" },
