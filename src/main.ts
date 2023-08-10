@@ -15,17 +15,11 @@ export interface Todo {
 
 const { a, button, footer, h1, header, input, label, li, section, span, ul } = van.tags
 
-const todosAtom = atom<Todo[]>([
-  { label: "Todo 1", id: "321123", is_delete: false, done: false },
-  { label: "Todo 2", id: "123321", is_delete: false, done: true }
-])
+const todosAtom = atom<Todo[]>([])
 
-const App = () => { 
+const App = () => {
+  // Just use `van.state<Todo[]>([])` if you perfer to don't use jotai
   const todos = useAtom(todosAtom)
-  // const todos = van.state<Todo[]>([
-  //   { label: "Todo 1", id: "321123", is_delete: false, done: false },
-  //   { label: "Todo 2", id: "123321", is_delete: false, done: true }
-  // ])
 
   const inputTodo = van.state('')
 
