@@ -2,13 +2,7 @@ import 'todomvc-app-css/index.css'
 import { v4 as randomUUID } from 'uuid'
 import van from 'vanjs-core'
 import { TodoItem } from './components/TodoItem'
-
-export interface Todo {
-  id: string
-  label: string
-  done: boolean
-  is_delete: boolean
-}
+import { Todo } from './types'
 
 const { a, button, footer, h1, header, input, label, li, section, span, ul } = van.tags
 

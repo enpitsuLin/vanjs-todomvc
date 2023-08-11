@@ -1,7 +1,7 @@
 import van from 'vanjs-core'
-import { Todo } from '../main'
-const { div, button, input, label, li } = van.tags
+import { Todo } from '../types'
 
+const { div, button, input, label, li } = van.tags
 
 export const TodoItem = (props: {
   todo: Todo,
