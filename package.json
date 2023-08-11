@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@types/uuid": "^9.0.2",
-    "jotai": "^2.3.1",
     "todomvc-app-css": "^2.4.2",
     "uuid": "^9.0.0",
     "vanjs-core": "^1.0.1"
